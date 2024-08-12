@@ -1,0 +1,190 @@
+{
+  "project_info": {
+    "project_number": "521816597990",
+    "project_id": "babylog-67ad6",
+    "storage_bucket": "babylog-67ad6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521816597990:android:fe8a23d9a107e41bfa2227",
+        "android_client_info": {
+          "package_name": "baby_log.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3_D9o30imM5L_xXmC4u2e7QwLn_JoiCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "521816597990-r7u21t70bvk08pb57ka6j5r610kj8kkk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.babyLog"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521816597990:android:2ac2fc67eecc65f0fa2227",
+        "android_client_info": {
+          "package_name": "com.baby_log.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3_D9o30imM5L_xXmC4u2e7QwLn_JoiCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "521816597990-r7u21t70bvk08pb57ka6j5r610kj8kkk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.babyLog"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521816597990:android:ea7c7cacbcbc48d6fa2227",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3_D9o30imM5L_xXmC4u2e7QwLn_JoiCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "521816597990-r7u21t70bvk08pb57ka6j5r610kj8kkk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.babyLog"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521816597990:android:2013e699d5c32ccdfa2227",
+        "android_client_info": {
+          "package_name": "com.example.bab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3_D9o30imM5L_xXmC4u2e7QwLn_JoiCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "521816597990-r7u21t70bvk08pb57ka6j5r610kj8kkk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.babyLog"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521816597990:android:7b1964d2e05d469cfa2227",
+        "android_client_info": {
+          "package_name": "com.example.baby_log"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3_D9o30imM5L_xXmC4u2e7QwLn_JoiCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521816597990-7d621u94mlk5rh5evad43qq37scne7a0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "521816597990-r7u21t70bvk08pb57ka6j5r610kj8kkk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.babyLog"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
