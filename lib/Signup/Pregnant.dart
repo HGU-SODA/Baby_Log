@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:baaby_log/navigationBar.dart';
 
 class PregnantPage extends StatefulWidget {
   const PregnantPage({Key? key}) : super(key: key);
@@ -49,6 +50,12 @@ class _PregnantPageState extends State<PregnantPage> {
             content: Text('정보가 저장되었습니다.'),
             duration: Duration(milliseconds: 500),
           ),
+        );
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const navigationBar()),
+          (Route<dynamic> route) => false,
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -132,7 +139,7 @@ class _PregnantPageState extends State<PregnantPage> {
                             .format(_selectedDate),
                       ),
                       false,
-                      suffixIcon: Icon(Icons.calendar_today),
+                      suffixIcon: const Icon(Icons.calendar_today),
                     ),
                   ),
                 ),
@@ -234,8 +241,7 @@ class _PregnantPageState extends State<PregnantPage> {
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFFA7A7A7)),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10), // Reduced vertical padding
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 ),
               ),
             ),

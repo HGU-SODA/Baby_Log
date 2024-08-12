@@ -1,191 +1,348 @@
+import 'package:baaby_log/Mypage/ChangeNicknamePage.dart';
+import 'package:baaby_log/Mypage/ChangePassword.dart';
+import 'package:baaby_log/Mypage/ChangeIcon.dart';
+import 'package:baaby_log/Mypage/MyPageAlarm.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:baaby_log/Signup/LogInPage.dart'; // Ensure this import is correct based on your project structure
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:baaby_log/Signup/LogInPage.dart';
 
-class MyPage extends StatelessWidget {
+class MyPage extends StatefulWidget {
   const MyPage({super.key});
+
+  @override
+  _MyPageState createState() => _MyPageState();
+}
+
+class _MyPageState extends State<MyPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String _status = '';
+  String _nickname = '';
+  String _dueDate = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      DocumentSnapshot userData =
+          await _firestore.collection('users').doc(user.uid).get();
+      setState(() {
+        _status = userData['status'] ?? '';
+        _nickname = userData['nickName'] ?? '';
+        _dueDate = userData['dueDate'] ?? '';
+      });
+    }
+  }
+
+  String _getProfileImage() {
+    switch (_status) {
+      case '아기를 키우고 있어요':
+        return 'assets/raise_mypage.png';
+      case '임신 중이에요':
+        return 'assets/pregnant_mypage.png';
+      case '둘러볼게요':
+        return 'assets/look_mypage.png';
+      default:
+        return 'assets/look_mypage.png';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        //title: const Text('마이페이지'),
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        titleTextStyle: const TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Profile Section
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  bottom: BorderSide(color: Color(0xFFF5F5F5), width: 1.0),
-                ),
-              ),
-              child: Column(
+              height: 370,
+              child: Stack(
                 children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 50.0,
-                        backgroundImage: AssetImage('assets/avatar.png'),
-                        backgroundColor: Colors.orange[100],
-                      ),
-                      Positioned(
-                        top: 10,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: const Text(
-                            '얼굴 보고싶어요!',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    '몽글이',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                  Positioned(
+                    top: 99.24,
+                    left: 126,
+                    child: Image.asset(
+                      _getProfileImage(),
+                      width: 180,
+                      height: 204.76,
                     ),
                   ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    '2025.02.12 예정',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.orange,
-                      fontWeight: FontWeight.w500,
+                  Positioned(
+                    top: 320,
+                    left: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 60),
+                              child: Text(
+                                _nickname,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Pretendard Variable",
+                                  color: Color(0xFF2D2D2D),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child: IconButton(
+                                icon: const Icon(Icons.edit, size: 18),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ChangeNicknamePage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
+            Divider(thickness: 10, height: 67, color: const Color(0XFFF5F3EF)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(30, 32, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "내 계정 🔑",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "Pretendard Variable",
+                      color: Color(0XFF2D2D2D),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ChangeNicknamePage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "닉네임 변경 ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ChangePasswordPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "비밀번호 변경 ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ChangeIconPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "아이콘 변경 ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                    ],
+                  ),
+                  const Divider(thickness: 3, color: Color(0XFFF5F3EF)),
+                  const SizedBox(height: 37),
+                  const Text(
+                    "내 보관함 📌 ",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "Pretendard Variable",
+                      color: Color(0XFF2D2D2D),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          "주차별 안내사항",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          "전문가 칼럼",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          "커뮤니티",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 37),
+                    ],
+                  ),
+                  const Divider(thickness: 3, color: Color(0XFFF5F3EF)),
+                  const SizedBox(height: 37),
+                  const Text(
+                    "설정 ⚙️",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "Pretendard Variable",
+                      color: Color(0XFF2D2D2D),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MyPageAlarm(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "알림",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      GestureDetector(
+                        onTap: () async {
+                          try {
+                            // 현재 사용자 가져오기
+                            User? user = FirebaseAuth.instance.currentUser;
 
-            // Account Section
-            _buildSection(
-              title: '내 계정 🔑',
-              items: [
-                _buildItem('닉네임 변경'),
-                _buildItem('비밀번호 변경'),
-                _buildItem('아이콘 변경'),
-              ],
-            ),
+                            if (user != null) {
+                              // 계정 삭제
+                              await user.delete();
 
-            // Saved Content Section
-            _buildSection(
-              title: '내 보관함 📌',
-              items: [
-                _buildItem('주차별 안내사항'),
-                _buildItem('전문가 칼럼'),
-                _buildItem('커뮤니티'),
-              ],
-            ),
-
-            // Settings Section
-            _buildSection(
-              title: '설정 ⚙️',
-              items: [
-                _buildItem('알림'),
-                GestureDetector(
-                  onTap: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                  child: _buildItem('로그아웃'),
-                ),
-                _buildItem('계정 탈퇴'),
-              ],
+                              // 계정 삭제 후 로그인 페이지로 이동
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()),
+                                (Route<dynamic> route) => false,
+                              );
+                            }
+                          } catch (e) {
+                            print("계정 삭제 중 오류 발생: $e");
+                            if (e is FirebaseAuthException &&
+                                e.code == 'requires-recent-login') {}
+                          }
+                        },
+                        child: Text(
+                          "로그아웃",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          "계정 탈퇴",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 66),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSection({required String title, required List<Widget> items}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: Color(0xFFF5F5F5), width: 1.0),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Column(children: items),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildItem(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Colors.black,
-            ),
-          ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.grey,
-            size: 16,
-          ),
-        ],
       ),
     );
   }
