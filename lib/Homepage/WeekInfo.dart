@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class WeekInfo extends StatelessWidget {
   final int index;
-  
+
   const WeekInfo({super.key, required this.index});
 
   @override

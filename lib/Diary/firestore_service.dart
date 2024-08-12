@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
   Future<void> saveDiaryEntry(
       String userId, DateTime date, String note, String? imageUrl) async {
     try {
@@ -37,6 +38,20 @@ class FirestoreService {
     } catch (e) {
       print('Error fetching diary entry: $e');
       return null;
+    }
+  }
+
+  Future<void> deleteDiaryEntry(String userId, DateTime date) async {
+    try {
+      final docRef = _db
+          .collection('diaries')
+          .doc(userId)
+          .collection('entries')
+          .doc(date.toIso8601String());
+      await docRef.delete();
+    } catch (e) {
+      print('Failed to delete diary entry: $e');
+      throw e;
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +14,7 @@ class DiaryPage extends StatefulWidget {
   final String? initialImageUrl;
   final void Function(String? imageUrl, String note) onSave;
   final VoidCallback onDelete;
+
   DiaryPage({
     required this.date,
     this.initialNote,
@@ -20,6 +22,7 @@ class DiaryPage extends StatefulWidget {
     required this.onSave,
     required this.onDelete,
   });
+
   @override
   _DiaryPageState createState() => _DiaryPageState();
 }
@@ -31,6 +34,7 @@ class _DiaryPageState extends State<DiaryPage> {
   bool _isEditing = false;
   Uint8List? _imageBytes;
   String? _imageUrl;
+
   @override
   void initState() {
     super.initState();
@@ -60,9 +64,11 @@ class _DiaryPageState extends State<DiaryPage> {
         setState(() {
           _noteController.text = diaryEntry.note ?? '';
           _imageUrl = diaryEntry.imageUrl;
+          _isSaved = true; // 일기 데이터를 불러온 경우 저장 상태로 설정
         });
       } else {
         print('No diary entry found for this date.');
+        _isSaved = false; // 일기가 없는 경우 저장 상태가 아님
       }
     } catch (e) {
       print('Failed to load diary entry: $e');
@@ -86,6 +92,7 @@ class _DiaryPageState extends State<DiaryPage> {
       );
       return;
     }
+
     String? imageUrl;
     if (_imageBytes != null) {
       final fileName =
@@ -104,6 +111,7 @@ class _DiaryPageState extends State<DiaryPage> {
         return;
       }
     }
+
     try {
       await _firestoreService.saveDiaryEntry(
         user.uid,
@@ -129,7 +137,7 @@ class _DiaryPageState extends State<DiaryPage> {
   void _startEditing() {
     setState(() {
       _isEditing = true;
-      _isSaved = false;
+      _isSaved = false; // 수정 모드로 바뀌면 저장 상태가 아님
     });
   }
 
@@ -224,9 +232,22 @@ class _DiaryPageState extends State<DiaryPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0XFFFFEDD8),
           title: Text('삭제하시겠습니까?'),
           actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _deleteDiaryEntry();
+              },
+              child: Text(
+                '예',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -234,19 +255,7 @@ class _DiaryPageState extends State<DiaryPage> {
               child: Text(
                 '아니오',
                 style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                widget.onDelete();
-                Navigator.of(context).pop();
-                Navigator.pop(context);
-              },
-              child: Text(
-                '예',
-                style: TextStyle(
+                  color: Colors.black,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -255,6 +264,47 @@ class _DiaryPageState extends State<DiaryPage> {
         );
       },
     );
+  }
+
+  Future<void> _deleteDiaryEntry() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('로그인 상태가 아닙니다.')),
+      );
+      return;
+    }
+
+    try {
+      // Firestore 문서 삭제
+      await _firestoreService.deleteDiaryEntry(user.uid, widget.date);
+
+      // Firebase Storage에서 이미지 삭제
+      if (_imageUrl != null) {
+        final storageRef = FirebaseStorage.instance.refFromURL(_imageUrl!);
+        await storageRef.delete();
+      }
+
+      // 앱 상태 업데이트
+      widget.onDelete();
+      _resetState(); // 상태 초기화
+      Navigator.pop(context);
+    } catch (e) {
+      print('Failed to delete diary entry: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('삭제 실패')),
+      );
+    }
+  }
+
+  void _resetState() {
+    setState(() {
+      _isSaved = false;
+      _isEditing = true; // 삭제 후 수정 모드로 전환
+      _noteController.text = '';
+      _imageBytes = null;
+      _imageUrl = null;
+    });
   }
 
   void _showCustomSnackbar() {
@@ -291,16 +341,15 @@ class _DiaryPageState extends State<DiaryPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.keyboard_arrow_left),
+          icon: Icon(CupertinoIcons.xmark),
         ),
-        title: Center(
-          child: Text(
-            DateFormat('yyyy년 M월').format(widget.date),
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
+        centerTitle: true,
+        title: Text(
+          DateFormat('yyyy년 M월').format(widget.date),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         actions: [
-          if (!_isSaved)
+          if (_isEditing || !_isSaved) // 수정 모드이거나 저장되지 않은 경우 체크마크 표시
             IconButton(
               icon: Icon(Icons.check),
               onPressed: _save,
@@ -319,7 +368,7 @@ class _DiaryPageState extends State<DiaryPage> {
                 child: Row(
                   children: [
                     Text(
-                      '${DateFormat('d').format(widget.date)}',
+                      '${DateFormat('d ').format(widget.date)}',
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
                     ),
@@ -329,7 +378,8 @@ class _DiaryPageState extends State<DiaryPage> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     Spacer(),
-                    if (_isSaved)
+                    if (_isSaved &&
+                        !_isEditing) // 저장된 상태이면서 수정 모드가 아닐 때 ellipses 버튼 표시
                       IconButton(
                         onPressed: _showBottomSheet,
                         icon: Icon(Icons.more_vert),
@@ -352,15 +402,19 @@ class _DiaryPageState extends State<DiaryPage> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: '소중한 추억을 기록하세요...',
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Color(0XFF74828D)),
                       ),
+                      style: TextStyle(color: Color(0XFF4E5968)),
                       maxLines: null,
+                      enabled: _isEditing ||
+                          (_noteController.text.isEmpty && _imageBytes == null),
+                      // 수정 모드일 때, 글과 사진 영역이 모두 비어있을 때만 입력 가능
                     ),
                     SizedBox(height: 10),
                     Container(
-                      height: 200,
+                      height: 300,
                       width: double.infinity,
-                      color: Colors.grey[200],
+                      color: Colors.white,
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
@@ -373,6 +427,27 @@ class _DiaryPageState extends State<DiaryPage> {
                             Image.network(
                               _imageUrl!,
                               fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            (loadingProgress
+                                                .expectedTotalBytes!)
+                                        : null,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (BuildContext context, Object error,
+                                  StackTrace? stackTrace) {
+                                return Center(
+                                    child: Text('이미지를 불러오는 중 문제가 발생했습니다.'));
+                              },
                             ),
                           Positioned(
                             bottom: 8,

@@ -46,14 +46,12 @@ class Experts1Content extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(left: 25),
-            child: Text(
-              '임신 중 운동해도 될까요?', 
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w700,
-                color: Color(0XFFFFAB47),
-              )
-            ),
+            child: Text('임신 중 운동해도 될까요?',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0XFFFFAB47),
+                )),
           ),
         ],
       ),
@@ -69,14 +67,12 @@ class Experts2Content extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(left: 25),
-            child: Text(
-              '조기 진통이 있다면?', 
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w700,
-                color: Color(0XFFFFAB47),
-              )
-            ),
+            child: Text('조기 진통이 있다면?',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0XFFFFAB47),
+                )),
           ),
         ],
       ),
@@ -92,14 +88,12 @@ class Experts3Content extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(left: 25),
-            child: Text(
-              '임신 우울증이 있다면?', 
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w700,
-                color: Color(0XFFFFAB47),
-              )
-            ),
+            child: Text('임신 우울증이 있다면?',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0XFFFFAB47),
+                )),
           ),
         ],
       ),

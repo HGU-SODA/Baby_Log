@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       //home: PregnantPage(),
-      home: navigationBar(),
+      home: Splash1(),
 
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

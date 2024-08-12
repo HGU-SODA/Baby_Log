@@ -30,7 +30,7 @@ class _UploadImageState extends State<UploadImage> {
         onPressed: _pickImage,
         icon: Icon(Icons.image),
         iconSize: 30,
-        color: Colors.grey[400],
+        color: Colors.grey[300],
       ),
     );
   }
