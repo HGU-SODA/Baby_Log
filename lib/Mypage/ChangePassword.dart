@@ -132,20 +132,20 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
           hintText: label,
           hintStyle: const TextStyle(
-            color: Color(0xFFA7A7A7),
+            color: Colors.black,
             fontSize: 16,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.black, width: 1),
+            borderSide: BorderSide(color: Color(0XFFA8A8A8), width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Color(0XFFA8A8A8)),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Color(0XFFA8A8A8)),
           ),
         ),
       ),

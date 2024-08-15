@@ -92,9 +92,9 @@ class _PostFormState extends State<PostForm> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final snackbar = SnackBar(
       content: Container(
+        height: 25,
         width: double.infinity,
         color: Color(0XFFFFDCB2),
-        padding: EdgeInsets.symmetric(vertical: 10),
         child: Center(
           child: Text(
             '업로드되었습니다!',
@@ -110,7 +110,6 @@ class _PostFormState extends State<PostForm> {
       elevation: 0,
       duration: Duration(seconds: 1),
     );
-
     scaffoldMessenger.showSnackBar(snackbar);
   }
 

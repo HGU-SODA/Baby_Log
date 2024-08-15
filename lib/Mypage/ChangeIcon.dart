@@ -43,7 +43,7 @@ class _ChangeIconPageState extends State<ChangeIconPage> {
 
   Widget _buildIcon(String label, String imageAsset) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 28.0),
       child: GestureDetector(
         onTap: () {
           setState(() {
@@ -126,7 +126,7 @@ class _ChangeIconPageState extends State<ChangeIconPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 20.0, 0, 0),
+            padding: EdgeInsets.fromLTRB(23.0, 20.0, 0, 0),
             child: Text(
               '아이콘 변경',
               style: TextStyle(

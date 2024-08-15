@@ -55,6 +55,31 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
+  void _showCustomSnackbar(String message) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final snackbar = SnackBar(
+      content: Container(
+        height: 25,
+        width: double.infinity,
+        color: Color(0XFFFFDCB2),
+        child: Center(
+          child: Text(
+            message,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+        ),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Color(0XFFFFDCB2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      elevation: 0,
+      duration: Duration(seconds: 1),
+    );
+    scaffoldMessenger.showSnackBar(snackbar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +111,7 @@ class _MyPageState extends State<MyPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 60),
+                              padding: const EdgeInsets.only(left: 50),
                               child: Text(
                                 _nickname,
                                 style: const TextStyle(
@@ -126,7 +151,7 @@ class _MyPageState extends State<MyPage> {
             ),
             Divider(thickness: 10, height: 67, color: const Color(0XFFF5F3EF)),
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 32, 0, 0),
+              padding: const EdgeInsets.fromLTRB(30, 32, 30, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -139,6 +164,7 @@ class _MyPageState extends State<MyPage> {
                       color: Color(0XFF2D2D2D),
                     ),
                   ),
+                  SizedBox(height: 14),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -218,6 +244,7 @@ class _MyPageState extends State<MyPage> {
                       color: Color(0XFF2D2D2D),
                     ),
                   ),
+                  SizedBox(height: 14),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -244,6 +271,7 @@ class _MyPageState extends State<MyPage> {
                       GestureDetector(
                         onTap: () async {
                           await FirebaseAuth.instance.signOut();
+                          _showCustomSnackbar("로그아웃되었습니다!");
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -269,6 +297,7 @@ class _MyPageState extends State<MyPage> {
 
                             if (user != null) {
                               await user.delete();
+                              _showCustomSnackbar("계정이 삭제되었습니다!");
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
@@ -306,6 +335,7 @@ class _MyPageState extends State<MyPage> {
                       color: Color(0XFF2D2D2D),
                     ),
                   ),
+                  SizedBox(height: 14),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

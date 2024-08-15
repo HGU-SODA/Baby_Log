@@ -78,15 +78,36 @@ class _LoginPageState extends State<LoginPage> {
       }
     } on FirebaseAuthException catch (e) {
       debugPrint("로그인 실패: ${e.message}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('로그인 실패: ${e.message}')),
-      );
+      _showCustomSnackbar("로그인 실패: ${e.message}");
     } catch (e) {
       debugPrint("로그인 실패: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('로그인 실패: ${e.toString()}')),
-      );
+      _showCustomSnackbar("로그인 실패: ${e.toString()}");
     }
+  }
+
+  void _showCustomSnackbar(String message) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final snackbar = SnackBar(
+      content: Container(
+        height: 25,
+        width: double.infinity,
+        color: Color(0XFFFFDCB2),
+        child: Center(
+          child: Text(
+            message,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+        ),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Color(0XFFFFDCB2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      elevation: 0,
+      duration: Duration(seconds: 1),
+    );
+    scaffoldMessenger.showSnackBar(snackbar);
   }
 
   @override

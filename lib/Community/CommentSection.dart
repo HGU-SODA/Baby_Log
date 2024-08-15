@@ -16,7 +16,6 @@ class CommentsSection extends StatefulWidget {
 }
 
 class _CommentsSectionState extends State<CommentsSection> {
-
   void _editComment(String commentId, String initialContent) {
     Navigator.push(
       context,
@@ -27,19 +26,24 @@ class _CommentsSectionState extends State<CommentsSection> {
           postId: widget.postId,
           formType: 'comment',
           onSave: () async {
-            final updatedContent = (context.findAncestorWidgetOfExactType<EditCommentForm>()?.commentController.text ?? '').trim();
+            final updatedContent = (context
+                        .findAncestorWidgetOfExactType<EditCommentForm>()
+                        ?.commentController
+                        .text ??
+                    '')
+                .trim();
 
             if (updatedContent.isNotEmpty) {
               try {
                 await FirebaseFirestore.instance
-                  .collection('posts')
-                  .doc(widget.postId)
-                  .collection('comments')
-                  .doc(commentId)
-                  .update({
-                    'content': updatedContent,
-                    'updatedAt': FieldValue.serverTimestamp(),
-                  });
+                    .collection('posts')
+                    .doc(widget.postId)
+                    .collection('comments')
+                    .doc(commentId)
+                    .update({
+                  'content': updatedContent,
+                  'updatedAt': FieldValue.serverTimestamp(),
+                });
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Comment updated successfully!')),
@@ -108,7 +112,8 @@ class _CommentsSectionState extends State<CommentsSection> {
             final content = commentData['content'];
             final createdAt = commentData['createdAt']?.toDate();
             final DateFormat dateFormat = DateFormat('MM.dd. HH:mm');
-            final formattedDate = dateFormat.format(createdAt ?? DateTime.now());
+            final formattedDate =
+                dateFormat.format(createdAt ?? DateTime.now());
 
             return Container(
               margin: EdgeInsets.only(bottom: 8.0),
@@ -121,37 +126,38 @@ class _CommentsSectionState extends State<CommentsSection> {
                       StreamBuilder<String>(
                         stream: getUserIcon(commentAuthorId),
                         builder: (context, snapshot) {
-                        final userIcon = snapshot.data ?? '';
-                        return Container(
-                          width: 20,
-                          height: 20,
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFFFBA69),
-                            shape: const OvalBorder(),
-                          ),
-                          child: Center(
-                            child: Image.asset(
-                              _getIconAsset(userIcon),
-                              width: 10,
-                              height: 10,
-                              fit: BoxFit.contain,
+                          final userIcon = snapshot.data ?? '';
+                          return Container(
+                            width: 23,
+                            height: 23,
+                            decoration: ShapeDecoration(
+                              color: Color(0xFFFFBA69),
+                              shape: const OvalBorder(),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(width: 6),
+                            child: Center(
+                              child: Image.asset(
+                                _getIconAsset(userIcon),
+                                width: 13,
+                                height: 13,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 6),
                       Text(
                         commentData['authorNickname'],
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 17,
                           color: Color(0XFF2D2D2D),
                           fontWeight: FontWeight.w700,
                           fontFamily: "Inter",
                         ),
                       ),
                       Spacer(),
-                      CommentLikeButton(postId: widget.postId, commentId: commentId),
+                      CommentLikeButton(
+                          postId: widget.postId, commentId: commentId),
                       CommentPopupMenu(
                         currentUserId: widget.currentUserId,
                         commentAuthorId: commentAuthorId,
@@ -163,6 +169,7 @@ class _CommentsSectionState extends State<CommentsSection> {
                       ),
                     ],
                   ),
+                  SizedBox(width: 20),
                   Text(
                     formattedDate,
                     style: TextStyle(
@@ -172,10 +179,11 @@ class _CommentsSectionState extends State<CommentsSection> {
                       fontFamily: "Pretendard Variable",
                     ),
                   ),
+                  SizedBox(width: 20),
                   Text(
                     content,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 16,
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                       fontFamily: "Pretendard Variable",

@@ -20,7 +20,8 @@ class DefaultPostDetail extends StatefulWidget {
   final Future<String> Function(String) getPostAuthorNickname;
   final Future<String> Function() getPostAuthorId;
   final Future<DocumentSnapshot> Function() getPost;
-  final void Function(String formType, {String? initialContent, String? commentId}) onEdit;
+  final void Function(String formType,
+      {String? initialContent, String? commentId}) onEdit;
 
   const DefaultPostDetail({
     Key? key,
@@ -115,7 +116,6 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
       );
 
       Navigator.of(context).pop(); // 현재 페이지 닫기
-
     } catch (e) {
       print('Failed to save post: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -123,7 +123,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
       );
     }
   }
-  
+
   Future<void> _saveComment() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -134,22 +134,22 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
     }
 
     try {
-      await FirebaseFirestore.instance.collection('posts')
-        .doc(widget.postId)
-        .collection('comments')
-        .add({
-          'content': _commentController.text,
-          'authorId': user.uid,
-          'authorNickname': user.displayName ?? 'Anonymous', // Optional: 사용자 닉네임
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-      
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postId)
+          .collection('comments')
+          .add({
+        'content': _commentController.text,
+        'authorId': user.uid,
+        'authorNickname': user.displayName ?? 'Anonymous', // Optional: 사용자 닉네임
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Comment saved successfully!')),
       );
-      
-      Navigator.of(context).pop();  // 댓글 저장 후 페이지 닫기
 
+      Navigator.of(context).pop(); // 댓글 저장 후 페이지 닫기
     } catch (e) {
       print('Failed to save comment: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -187,7 +187,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
         }
-        
+
         final post = snapshot.data!;
         final title = post['title'];
         final content = post['content'];
@@ -221,17 +221,18 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (widget.type != '자랑로그') Divider(thickness: 2, color: Color(0XFFF2F3F5)),
-                        SizedBox(height: 10),
+                        if (widget.type != '자랑로그')
+                          Divider(thickness: 2, color: Color(0XFFF2F3F5)),
+                        SizedBox(height: 14),
                         Container(
                           height: 95,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (widget.type != '자랑로그') 
+                                  if (widget.type != '자랑로그')
                                     Text(
                                       title,
                                       style: TextStyle(
@@ -241,16 +242,17 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                         color: Colors.black,
                                       ),
                                     ),
-                                  if (widget.type == '자랑로그') 
+                                  if (widget.type == '자랑로그')
                                     Row(
                                       children: [
                                         StreamBuilder<String>(
                                           stream: getUserIcon(userId),
                                           builder: (context, snapshot) {
-                                            final userIcon = snapshot.data ?? '';
+                                            final userIcon =
+                                                snapshot.data ?? '';
                                             return Container(
-                                              width: 24,
-                                              height: 24,
+                                              width: 25,
+                                              height: 25,
                                               decoration: ShapeDecoration(
                                                 color: const Color(0xFFFFBA69),
                                                 shape: const OvalBorder(),
@@ -258,8 +260,8 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                               child: Center(
                                                 child: Image.asset(
                                                   _getIconAsset(userIcon),
-                                                  width: 14,
-                                                  height: 14,
+                                                  width: 15,
+                                                  height: 15,
                                                   fit: BoxFit.contain,
                                                 ),
                                               ),
@@ -270,7 +272,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                         Text(
                                           postAuthorNickname,
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: 17,
                                             fontWeight: FontWeight.w600,
                                             fontFamily: "Inter",
                                             color: Colors.black,
@@ -305,8 +307,8 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                       }
                                     },
                                     position: PopupMenuPosition.under,
-                                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                      
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuEntry<String>>[
                                       // if (currentUserId == postAuthorId)
                                       //   PopupMenuItem<String>(
                                       //     value: 'edit',
@@ -356,7 +358,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                   ),
                                 ],
                               ),
-                              if (widget.type != '자랑로그') 
+                              if (widget.type != '자랑로그')
                                 Column(
                                   children: [
                                     Row(
@@ -364,10 +366,11 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                         StreamBuilder<String>(
                                           stream: getUserIcon(userId),
                                           builder: (context, snapshot) {
-                                            final userIcon = snapshot.data ?? '';
+                                            final userIcon =
+                                                snapshot.data ?? '';
                                             return Container(
-                                              width: 24,
-                                              height: 24,
+                                              width: 25,
+                                              height: 25,
                                               decoration: ShapeDecoration(
                                                 color: const Color(0xFFFFBA69),
                                                 shape: const OvalBorder(),
@@ -375,8 +378,8 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                               child: Center(
                                                 child: Image.asset(
                                                   _getIconAsset(userIcon),
-                                                  width: 14,
-                                                  height: 14,
+                                                  width: 15,
+                                                  height: 15,
                                                   fit: BoxFit.contain,
                                                 ),
                                               ),
@@ -389,7 +392,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                           child: Text(
                                             postAuthorNickname,
                                             style: TextStyle(
-                                              fontSize: 13,
+                                              fontSize: 17,
                                               fontWeight: FontWeight.w700,
                                               fontFamily: "Inter",
                                               color: Color(0XFF2D2D2D),
@@ -424,7 +427,8 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                                  padding: const EdgeInsets.only(
+                                      top: 16.0, bottom: 8.0),
                                   child: Text(
                                     content,
                                     style: TextStyle(
@@ -439,7 +443,8 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                   padding: const EdgeInsets.only(bottom: 8.0),
                                   child: Row(
                                     children: [
-                                      LikeButton(postId: widget.postId, log4: false),
+                                      LikeButton(
+                                          postId: widget.postId, log4: false),
                                       SizedBox(width: 8),
                                       StreamBuilder<QuerySnapshot>(
                                         stream: FirebaseFirestore.instance
@@ -452,7 +457,10 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                             return Row(
                                               children: [
                                                 IconButton(
-                                                  icon: Icon(CupertinoIcons.chat_bubble_2, color: Color(0XFF666667)),
+                                                  icon: Icon(
+                                                      CupertinoIcons
+                                                          .chat_bubble_2,
+                                                      color: Color(0XFF666667)),
                                                   onPressed: () {},
                                                 ),
                                                 Text(
@@ -460,18 +468,23 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.w500,
-                                                    fontFamily: "Pretendard Variable",
+                                                    fontFamily:
+                                                        "Pretendard Variable",
                                                     color: Color(0XFF666667),
                                                   ),
                                                 ),
                                               ],
                                             );
                                           }
-                                          final commentCount = snapshot.data!.docs.length;
+                                          final commentCount =
+                                              snapshot.data!.docs.length;
                                           return Row(
                                             children: [
                                               IconButton(
-                                                icon: Icon(CupertinoIcons.chat_bubble_2, color: Color(0XFF666667)),
+                                                icon: Icon(
+                                                    CupertinoIcons
+                                                        .chat_bubble_2,
+                                                    color: Color(0XFF666667)),
                                                 onPressed: () {},
                                               ),
                                               Text(
@@ -479,14 +492,19 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w500,
-                                                  fontFamily: "Pretendard Variable",
+                                                  fontFamily:
+                                                      "Pretendard Variable",
                                                   color: Color(0XFF666667),
                                                 ),
                                               ),
                                               IconButton(
-                                                onPressed: widget.onToggleBookmark,
+                                                onPressed:
+                                                    widget.onToggleBookmark,
                                                 icon: Icon(
-                                                  widget.isSaved ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
+                                                  widget.isSaved
+                                                      ? CupertinoIcons
+                                                          .bookmark_fill
+                                                      : CupertinoIcons.bookmark,
                                                   size: 18,
                                                   color: Color(0XFF666667),
                                                 ),
@@ -504,21 +522,29 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                         ],
                         if (widget.type == '자랑로그') ...[
                           FutureBuilder<DocumentSnapshot>(
-                            future: FirebaseFirestore.instance.collection('posts').doc(widget.postId).get(),
+                            future: FirebaseFirestore.instance
+                                .collection('posts')
+                                .doc(widget.postId)
+                                .get(),
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
                                 return Container(
                                   height: 430,
                                   width: double.infinity,
                                   color: Colors.grey[300],
-                                  child: Center(child: CircularProgressIndicator()),
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
                                 );
-                              } else if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
+                              } else if (snapshot.hasError ||
+                                  !snapshot.hasData ||
+                                  !snapshot.data!.exists) {
                                 return Container(
                                   height: 430,
                                   width: double.infinity,
                                   color: Colors.grey[300],
-                                  child: Center(child: Text("이미지를 불러오는데 실패했습니다.")),
+                                  child:
+                                      Center(child: Text("이미지를 불러오는데 실패했습니다.")),
                                 );
                               } else {
                                 final postData = snapshot.data!;
@@ -563,7 +589,9 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                       return Row(
                                         children: [
                                           IconButton(
-                                            icon: Icon(CupertinoIcons.chat_bubble_2, color: Colors.black),
+                                            icon: Icon(
+                                                CupertinoIcons.chat_bubble_2,
+                                                color: Colors.black),
                                             onPressed: () {},
                                           ),
                                           Text(
@@ -578,11 +606,15 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                         ],
                                       );
                                     }
-                                    final commentCount = snapshot.data!.docs.length;
+                                    final commentCount =
+                                        snapshot.data!.docs.length;
                                     return Row(
                                       children: [
                                         IconButton(
-                                          icon: Icon(CupertinoIcons.chat_bubble_2, color: Color(0XFF666667),),
+                                          icon: Icon(
+                                            CupertinoIcons.chat_bubble_2,
+                                            color: Color(0XFF666667),
+                                          ),
                                           onPressed: () {},
                                         ),
                                         Text(
@@ -598,7 +630,9 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                                         IconButton(
                                           onPressed: widget.onToggleBookmark,
                                           icon: Icon(
-                                            widget.isSaved ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
+                                            widget.isSaved
+                                                ? CupertinoIcons.bookmark_fill
+                                                : CupertinoIcons.bookmark,
                                             size: 18,
                                             color: Color(0XFF666667),
                                           ),
@@ -643,7 +677,8 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                         // Comments Section
                         CommentsSection(
                           postId: widget.postId,
-                          currentUserId: FirebaseAuth.instance.currentUser?.uid ?? '',
+                          currentUserId:
+                              FirebaseAuth.instance.currentUser?.uid ?? '',
                         ),
                       ],
                     ),
@@ -772,9 +807,9 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final snackbar = SnackBar(
       content: Container(
+        height: 25,
         width: double.infinity,
         color: Color(0XFFFFDCB2),
-        padding: EdgeInsets.symmetric(vertical: 10),
         child: Center(
           child: Text(
             message,
@@ -796,10 +831,11 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
   Future<void> _deletePost() async {
     try {
       await FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
-        .delete();
-      Navigator.of(context).pop(); // Close the current screen and return to the previous screen.
+          .collection('posts')
+          .doc(widget.postId)
+          .delete();
+      Navigator.of(context)
+          .pop(); // Close the current screen and return to the previous screen.
       _showCustomSnackbar('게시물이 삭제되었습니다.');
     } catch (e) {
       print('게시물 삭제에 실패했습니다: $e');

@@ -64,23 +64,31 @@ class _CommentPopupMenuState extends State<CommentPopupMenu> {
         if (widget.currentUserId == widget.commentAuthorId)
           PopupMenuItem<String>(
             value: 'delete',
-            child: Row(
-              children: [
-                Icon(Icons.delete),
-                SizedBox(width: 8),
-                Text('삭제하기'),
-              ],
+            child: Container(
+              width: 200,
+              height: 20,
+              child: Row(
+                children: [
+                  Icon(Icons.delete),
+                  SizedBox(width: 8),
+                  Text('삭제하기'),
+                ],
+              ),
             ),
           ),
         if (widget.currentUserId != widget.commentAuthorId)
           PopupMenuItem<String>(
             value: 'report',
-            child: Row(
-              children: [
-                Icon(Icons.flag),
-                SizedBox(width: 8),
-                Text('신고하기'),
-              ],
+            child: Container(
+              width: 200,
+              height: 20,
+              child: Row(
+                children: [
+                  Icon(Icons.flag),
+                  SizedBox(width: 8),
+                  Text('신고하기'),
+                ],
+              ),
             ),
           ),
       ],
@@ -98,7 +106,7 @@ class _CommentPopupMenuState extends State<CommentPopupMenu> {
             children: [
               Image.asset('assets/deteledialog.png'),
               Positioned(
-                bottom: 10,
+                bottom: 0,
                 child: Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Row(
@@ -154,7 +162,7 @@ class _CommentPopupMenuState extends State<CommentPopupMenu> {
             children: [
               Image.asset('assets/reportdialog.png'),
               Positioned(
-                bottom: 10,
+                bottom: 0,
                 child: Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Row(
@@ -171,6 +179,7 @@ class _CommentPopupMenuState extends State<CommentPopupMenu> {
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
+                          _showCustomSnackbar('신고되었습니다!');
                         },
                       ),
                       SizedBox(width: 80),
@@ -202,9 +211,9 @@ class _CommentPopupMenuState extends State<CommentPopupMenu> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final snackbar = SnackBar(
       content: Container(
+        height: 25,
         width: double.infinity,
         color: Color(0XFFFFDCB2),
-        padding: EdgeInsets.symmetric(vertical: 10),
         child: Center(
           child: Text(
             message,

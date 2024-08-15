@@ -24,9 +24,9 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
   int _textIndex = 0;
   final List<String> _texts = [
     '얼른 보고 싶어요!',
-    '히야아아아!',
+    '히야아아!',
     '기다려주세요!',
-    '엄맘마~',
+    '엄마가 제일 좋아!',
     '우리 곧 만나요!'
   ];
 

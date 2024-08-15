@@ -121,9 +121,9 @@ class _PostDetailState extends State<PostDetail> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final snackbar = SnackBar(
       content: Container(
+        height: 20,
         width: double.infinity,
         color: Color(0XFFFFDCB2),
-        padding: EdgeInsets.symmetric(vertical: 10),
         child: Center(
           child: Text(
             message,

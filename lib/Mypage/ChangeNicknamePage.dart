@@ -146,8 +146,16 @@ class _ChangeNicknamePageState extends State<ChangeNicknamePage> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: const BorderSide(
                     width: 1,
-                    color: Color(0xFFA7A7A7),
+                    color: Color(0XFFA8A8A8),
                   ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Color(0XFFA8A8A8)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Color(0XFFA8A8A8)),
                 ),
               ),
             ),

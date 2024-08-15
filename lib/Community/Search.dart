@@ -81,7 +81,7 @@ class _SearchState extends State<Search> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 30, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, 80, 0, 0),
             child: Row(
               children: [
                 Padding(
@@ -94,7 +94,7 @@ class _SearchState extends State<Search> {
                   ),
                 ),
                 Container(
-                  width: 360,
+                  width: 335,
                   child: TextField(
                     controller: _searchController,
                     cursorColor: Color(0XFFFF9C27),
@@ -125,7 +125,6 @@ class _SearchState extends State<Search> {
               ],
             ),
           ),
-          SizedBox(height: 20),
           Expanded(
             child: searchResults.isEmpty
                 ? Center(child: Text('검색 결과가 없습니다.'))
@@ -364,7 +363,6 @@ class _SearchState extends State<Search> {
                                 );
                               },
                               child: ListTile(
-                                contentPadding: EdgeInsets.all(16.0),
                                 title: Text(
                                   data?['title'] ?? '제목 없음',
                                   style: TextStyle(

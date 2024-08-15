@@ -218,7 +218,7 @@ class _ChangeBabyInfoPageState extends State<ChangeBabyInfoPage> {
         controller: controller,
         obscureText: isPassword,
         cursorColor: Color(0XFFFF9C27),
-        style: TextStyle(color: Color(0XFF4E5968)),
+        style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
           hintText: hintText,
@@ -228,15 +228,15 @@ class _ChangeBabyInfoPageState extends State<ChangeBabyInfoPage> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.black, width: 1),
+            borderSide: BorderSide(color: Colors.black54, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Colors.black54),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Colors.black54),
           ),
         ),
       ),
