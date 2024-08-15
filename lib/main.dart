@@ -1,5 +1,8 @@
+import 'package:baaby_log/Homepage/HomePage.dart';
+import 'package:baaby_log/Homepage/LookHomePage.dart';
 import 'package:baaby_log/Mypage/MyPage.dart';
 import 'package:baaby_log/Signup/SignUpPage.dart';
+import 'package:baaby_log/Signup/FindMyInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // Add this import
 import 'package:baaby_log/Signup/LogInPage.dart';
@@ -28,8 +31,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      //home: PregnantPage(),
-      home: navigationBar(),
+      home: Splash1(),
+      /*home: navigationBar(
+        homePage: LookHomePage(),
+      )*/
 
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

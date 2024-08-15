@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'PostForm.dart';
 import 'PostList.dart';
+import 'Search.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -12,18 +13,12 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  bool _showBottomSheet = true;
   late String _currentUserId;
 
   @override
   void initState() {
     super.initState();
     _currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_showBottomSheet) {
-        _showRulesBottomSheet(context);
-      }
-    });
   }
 
   void _showRulesBottomSheet(BuildContext context) {
@@ -31,52 +26,47 @@ class _CommunityPageState extends State<CommunityPage> {
       context: context,
       isDismissible: false,
       isScrollControlled: true,
+      backgroundColor: Colors.white,
+      constraints: BoxConstraints(
+        maxHeight: 836, minHeight: 836, maxWidth: 430, minWidth: 430
+      ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(23),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(23)),
       ),
       builder: (BuildContext context) {
-        return Container(
-          height: 836,
-          color: Colors.white,
-          padding: EdgeInsets.fromLTRB(23, 26, 23, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset('assets/사용 규칙.png'),
-              SizedBox(height: 32),
-              Padding(
-                padding: const EdgeInsets.only(left: 105),
-                child: SizedBox(
-                  width: 175,
-                  height: 47,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Color(0XFFFF9C27),
-                      side: BorderSide.none,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.check, color: Colors.white, size: 24),
-                        SizedBox(width: 5),
-                        Text(
-                          '확인했어요',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset('assets/사용 규칙.png'),
+            SizedBox(height: 32),
+            SizedBox(
+              width: 175,
+              height: 47,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Color(0XFFFF9C27),
+                  side: BorderSide.none,
                 ),
-              )
-            ],
-          ),
+                onPressed: () { Navigator.pop(context); },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check, color: Colors.white, size: 24),
+                    SizedBox(width: 5),
+                    Text(
+                      '확인했어요',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
         );
       },
     );
@@ -94,7 +84,12 @@ class _CommunityPageState extends State<CommunityPage> {
             alignment: Alignment.topRight,
             child: IconButton(
               icon: Icon(Icons.search),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Search())
+                );
+              },
             ),
           ),
           bottom: TabBar(
@@ -122,8 +117,7 @@ class _CommunityPageState extends State<CommunityPage> {
           backgroundColor: Color(0XFFFFBC6B),
           elevation: 4,
           child: Icon(Symbols.edit, color: Colors.black),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
           onPressed: () async {
             final result = await Navigator.push(
               context,
@@ -134,11 +128,6 @@ class _CommunityPageState extends State<CommunityPage> {
                 ),
               ),
             );
-            if (result == 'fromPostForm') {
-              setState(() {
-                _showBottomSheet = false;
-              });
-            }
           },
         ),
       ),

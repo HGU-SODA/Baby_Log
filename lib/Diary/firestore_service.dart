@@ -1,17 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-
-  Future<void> saveDiaryEntry(
-      String userId, DateTime date, String note, String? imageUrl) async {
+  
+  Future<void> saveDiaryEntry(String userId, DateTime date, String note, String? imageUrl) async {
     try {
-      await _db
-          .collection('diaries')
-          .doc(userId)
-          .collection('entries')
-          .doc(date.toIso8601String())
-          .set({
+      await _db.collection('diaries').doc(userId).collection('entries').doc(date.toIso8601String()).set({
         'note': note,
         'imageUrl': imageUrl,
         'date': date.toIso8601String(), // 저장할 때 date를 문자열로 저장
@@ -21,7 +14,7 @@ class FirestoreService {
       throw e;
     }
   }
-
+  
   Future<DiaryEntry?> getDiaryEntry(String userId, DateTime date) async {
     try {
       final snapshot = await _db

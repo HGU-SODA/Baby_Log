@@ -1,11 +1,16 @@
+import 'package:baaby_log/Homepage/LookHomePage.dart';
+import 'package:baaby_log/Homepage/ParentHomePage.dart';
+import 'package:baaby_log/Homepage/PregnantHomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'SignUpPage.dart';
 import '../navigationBar.dart';
+import 'FindMyInfo.dart';
+import 'SignUpPage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -52,14 +57,16 @@ class _LoginPageState extends State<LoginPage> {
     try {
       String? email = await _getEmailById(_idController.text.trim());
       if (email != null) {
-        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        await _auth.signInWithEmailAndPassword(
           email: email,
           password: _passwordController.text.trim(),
         );
-        print("로그인 성공: ${userCredential.user?.email}");
-        Navigator.pushReplacement(
+
+        // Navigate to the navigationBar and remove all previous routes
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const navigationBar()),
+          (Route<dynamic> route) => false,
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -109,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 90.0),
+                const SizedBox(height: 100.0),
                 Image.asset('assets/logo_word.png', width: 183, height: 75),
                 const SizedBox(height: 99.0),
                 const Padding(
@@ -159,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 26.0),
                 const Padding(
                   padding: EdgeInsets.only(left: 43.0),
                   child: Align(
@@ -213,7 +220,12 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                       onPressed: () {
-                        // 아이디/비밀번호 찾기 화면으로 이동
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FindMyInfoPage(),
+                          ),
+                        );
                       },
                       child: const Text(
                         '아이디 / 비밀번호 찾기',
@@ -245,9 +257,6 @@ class _LoginPageState extends State<LoginPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        /*shadowColor: _isButtonActive
-                            ? Colors.transparent
-                            : Color(0x3FFFAB47),*/
                         elevation: _isButtonActive ? 8.0 : 0.0,
                       ),
                       child: Text(

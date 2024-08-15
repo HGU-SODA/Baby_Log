@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 
 class LikeButton extends StatefulWidget {
   final String postId;
+  final bool log4; // 자랑로그인지 아닌지
+  final bool showCount; // 숫자를 표시할지 말지
 
-  const LikeButton({required this.postId});
+  const LikeButton({required this.postId, required this.log4, this.showCount = true,});
 
   @override
   _LikeButtonState createState() => _LikeButtonState();
@@ -23,12 +25,8 @@ class _LikeButtonState extends State<LikeButton> {
   Future<void> _initializeFavoriteStatus() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      final isLiked =
-          userDoc.data()?['likedPosts']?.containsKey(widget.postId) ?? false;
+      final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final isLiked = userDoc.data()?['likedPosts']?.containsKey(widget.postId) ?? false;
       setState(() {
         _isFavorited = isLiked;
       });
@@ -38,10 +36,8 @@ class _LikeButtonState extends State<LikeButton> {
   Future<void> _toggleFavorite() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userRef =
-          FirebaseFirestore.instance.collection('users').doc(user.uid);
-      final postRef =
-          FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+      final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final postRef = FirebaseFirestore.instance.collection('posts').doc(widget.postId);
 
       try {
         if (_isFavorited) {
@@ -82,16 +78,26 @@ class _LikeButtonState extends State<LikeButton> {
       builder: (context, snapshot) {
         final likesCount = snapshot.data ?? 0;
 
+        final iconColor = widget.log4
+            ? (_isFavorited ? Colors.red : Colors.black)
+            : (_isFavorited ? Colors.red : Color(0XFF666667));
+
+        final textColor = widget.log4 ? Colors.black : Color(0XFF666667);
+
         return Row(
           children: [
             IconButton(
               icon: Icon(
                 _isFavorited ? Icons.favorite : Icons.favorite_border,
-                color: _isFavorited ? Colors.red : Color(0XFF666667),
+                color:  iconColor
               ),
               onPressed: _toggleFavorite,
             ),
-            Text('$likesCount'),
+            if (widget.showCount)
+              Text(
+                '$likesCount',
+                style: TextStyle(color: textColor),
+              ),
           ],
         );
       },

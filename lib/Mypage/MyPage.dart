@@ -1,11 +1,13 @@
-import 'package:baaby_log/Mypage/ChangeNicknamePage.dart';
-import 'package:baaby_log/Mypage/ChangePassword.dart';
-import 'package:baaby_log/Mypage/ChangeIcon.dart';
-import 'package:baaby_log/Mypage/MyPageAlarm.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:baaby_log/Signup/LogInPage.dart';
+import '../Community/Bookmark3.dart';
+import 'ChangeNicknamePage.dart';
+import 'ChangePassword.dart';
+import 'ChangeIcon.dart';
+import 'ChangeBabyInfo.dart';
+import 'MyPageAlarm.dart';
+import '../Signup/LogInPage.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -99,14 +101,17 @@ class _MyPageState extends State<MyPage> {
                               padding: const EdgeInsets.only(left: 4),
                               child: IconButton(
                                 icon: const Icon(Icons.edit, size: 18),
-                                onPressed: () {
-                                  Navigator.push(
+                                onPressed: () async {
+                                  bool? result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           const ChangeNicknamePage(),
                                     ),
                                   );
+                                  if (result == true) {
+                                    _loadUserData();
+                                  }
                                 },
                               ),
                             ),
@@ -142,12 +147,12 @@ class _MyPageState extends State<MyPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ChangeNicknamePage(),
+                              builder: (context) => const ChangeBabyInfoPage(),
                             ),
                           );
                         },
                         child: Text(
-                          "닉네임 변경 ",
+                          "아이 정보 변경 ",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -178,71 +183,19 @@ class _MyPageState extends State<MyPage> {
                       ),
                       SizedBox(height: 11),
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          bool? result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const ChangeIconPage(),
                             ),
                           );
+                          if (result == true) {
+                            _loadUserData();
+                          }
                         },
                         child: Text(
                           "아이콘 변경 ",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "Pretendard Variable",
-                            color: Color(0XFF828282),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 11),
-                    ],
-                  ),
-                  const Divider(thickness: 3, color: Color(0XFFF5F3EF)),
-                  const SizedBox(height: 37),
-                  const Text(
-                    "내 보관함 📌 ",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "Pretendard Variable",
-                      color: Color(0XFF2D2D2D),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          "주차별 안내사항",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "Pretendard Variable",
-                            color: Color(0XFF828282),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 11),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          "전문가 칼럼",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "Pretendard Variable",
-                            color: Color(0XFF828282),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 11),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          "커뮤니티",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -290,15 +243,32 @@ class _MyPageState extends State<MyPage> {
                       SizedBox(height: 11),
                       GestureDetector(
                         onTap: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                            (Route<dynamic> route) => false,
+                          );
+                        },
+                        child: Text(
+                          "로그아웃",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 11),
+                      GestureDetector(
+                        onTap: () async {
                           try {
-                            // 현재 사용자 가져오기
                             User? user = FirebaseAuth.instance.currentUser;
 
                             if (user != null) {
-                              // 계정 삭제
                               await user.delete();
-
-                              // 계정 삭제 후 로그인 페이지로 이동
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
@@ -313,19 +283,6 @@ class _MyPageState extends State<MyPage> {
                           }
                         },
                         child: Text(
-                          "로그아웃",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "Pretendard Variable",
-                            color: Color(0XFF828282),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 11),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
                           "계정 탈퇴",
                           style: TextStyle(
                             fontSize: 18,
@@ -335,7 +292,43 @@ class _MyPageState extends State<MyPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 66),
+                      const SizedBox(height: 37),
+                    ],
+                  ),
+                  const Divider(thickness: 3, color: Color(0XFFF5F3EF)),
+                  const SizedBox(height: 37),
+                  const Text(
+                    "내 보관함 📌 ",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "Pretendard Variable",
+                      color: Color(0XFF2D2D2D),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Bookmark3(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "커뮤니티",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Pretendard Variable",
+                            color: Color(0XFF828282),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 37),
                     ],
                   ),
                 ],

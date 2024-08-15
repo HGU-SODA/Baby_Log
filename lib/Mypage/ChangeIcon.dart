@@ -37,7 +37,7 @@ class _ChangeIconPageState extends State<ChangeIconPage> {
       await _firestore.collection('users').doc(user.uid).update({
         'status': _selectedIcon,
       });
-      Navigator.pop(context);
+      Navigator.pop(context, true); // true를 반환하여 변경사항이 있음을 알림
     }
   }
 

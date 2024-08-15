@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
@@ -95,11 +94,9 @@ class _DiaryPageState extends State<DiaryPage> {
 
     String? imageUrl;
     if (_imageBytes != null) {
-      final fileName =
-          '${widget.date.toIso8601String()}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName = '${widget.date.toIso8601String()}_${DateTime.now().millisecondsSinceEpoch}.jpg';
       try {
-        final storageRef =
-            FirebaseStorage.instance.ref().child('images').child(fileName);
+        final storageRef = FirebaseStorage.instance.ref().child('images').child(fileName);
         final uploadTask = storageRef.putData(_imageBytes!);
         final snapshot = await uploadTask.whenComplete(() {});
         imageUrl = await snapshot.ref.getDownloadURL();
@@ -126,6 +123,9 @@ class _DiaryPageState extends State<DiaryPage> {
         _isEditing = false;
         _imageUrl = imageUrl ?? _imageUrl;
       });
+      
+      // 캘린더 페이지 새로고침
+      Navigator.of(context).pop();  // 현재 DiaryPage 닫기
     } catch (e) {
       print('Failed to save diary entry: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -171,14 +171,6 @@ class _DiaryPageState extends State<DiaryPage> {
                   Navigator.pop(context);
                   _showDeleteDialog();
                 },
-              ),
-              Divider(color: Color(0XFFEEE5DA)),
-              _buildBottomSheetTile(
-                text: '취소',
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                isCancel: true,
               ),
             ],
           ),
@@ -369,17 +361,14 @@ class _DiaryPageState extends State<DiaryPage> {
                   children: [
                     Text(
                       '${DateFormat('d ').format(widget.date)}',
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
                     ),
                     Text(
                       '${DateFormat('EEEE').format(widget.date)}',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     Spacer(),
-                    if (_isSaved &&
-                        !_isEditing) // 저장된 상태이면서 수정 모드가 아닐 때 ellipses 버튼 표시
+                    if (_isSaved && !_isEditing) // 저장된 상태이면서 수정 모드가 아닐 때 ellipses 버튼 표시
                       IconButton(
                         onPressed: _showBottomSheet,
                         icon: Icon(Icons.more_vert),
@@ -406,8 +395,7 @@ class _DiaryPageState extends State<DiaryPage> {
                       ),
                       style: TextStyle(color: Color(0XFF4E5968)),
                       maxLines: null,
-                      enabled: _isEditing ||
-                          (_noteController.text.isEmpty && _imageBytes == null),
+                      enabled: _isEditing || (_noteController.text.isEmpty || _imageBytes == null),
                       // 수정 모드일 때, 글과 사진 영역이 모두 비어있을 때만 입력 가능
                     ),
                     SizedBox(height: 10),
@@ -427,26 +415,18 @@ class _DiaryPageState extends State<DiaryPage> {
                             Image.network(
                               _imageUrl!,
                               fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
+                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                                 if (loadingProgress == null) return child;
                                 return Center(
                                   child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            (loadingProgress
-                                                .expectedTotalBytes!)
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes!)
                                         : null,
                                   ),
                                 );
                               },
-                              errorBuilder: (BuildContext context, Object error,
-                                  StackTrace? stackTrace) {
-                                return Center(
-                                    child: Text('이미지를 불러오는 중 문제가 발생했습니다.'));
+                              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                return Center(child: Text('이미지를 불러오는 중 문제가 발생했습니다.'));
                               },
                             ),
                           Positioned(

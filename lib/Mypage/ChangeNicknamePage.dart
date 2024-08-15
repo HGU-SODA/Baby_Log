@@ -36,10 +36,41 @@ class _ChangeNicknamePageState extends State<ChangeNicknamePage> {
     if (newNickname.isNotEmpty) {
       User? user = _auth.currentUser;
       if (user != null) {
+        // Update user's nickname in the users collection
         await _firestore.collection('users').doc(user.uid).update({
           'nickName': newNickname,
         });
-        Navigator.pop(context);
+
+        // Update nickname in all posts where the user is the author
+        QuerySnapshot postSnapshot = await _firestore
+            .collection('posts')
+            .where('authorId', isEqualTo: user.uid)
+            .get();
+
+        for (var post in postSnapshot.docs) {
+          await post.reference.update({
+            'authorNickname': newNickname,
+          });
+        }
+
+        // Update nickname in all comments written by the user across all posts
+        QuerySnapshot allPostsSnapshot =
+            await _firestore.collection('posts').get();
+
+        for (var post in allPostsSnapshot.docs) {
+          QuerySnapshot commentSnapshot = await post.reference
+              .collection('comments')
+              .where('authorId', isEqualTo: user.uid)
+              .get();
+
+          for (var comment in commentSnapshot.docs) {
+            await comment.reference.update({
+              'authorNickname': newNickname,
+            });
+          }
+        }
+
+        Navigator.pop(context, true); // Notify the user of the update
       }
     }
   }

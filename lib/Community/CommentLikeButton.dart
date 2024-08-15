@@ -27,27 +27,17 @@ class _CommentLikeButtonState extends State<CommentLikeButton> {
   Future<void> _initializeFavoriteStatus() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      final isLiked =
-          userDoc.data()?['likedComments']?.containsKey(widget.commentId) ??
-              false;
+      final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final isLiked = userDoc.data()?['likedComments']?.containsKey(widget.commentId) ?? false;
       setState(() {
         _isFavorited = isLiked;
       });
     }
   }
 
-  Future<void> toggleFavorite(
-      String postId, String commentId, bool isFavorited) async {
+  Future<void> toggleFavorite(String postId, String commentId, bool isFavorited) async {
     final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    final commentRef = FirebaseFirestore.instance
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .doc(commentId);
+    final commentRef = FirebaseFirestore.instance.collection('posts').doc(postId).collection('comments').doc(commentId);
     final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
 
     await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -66,15 +56,13 @@ class _CommentLikeButtonState extends State<CommentLikeButton> {
         likedComments[commentId] = true;
         await transaction.update(userRef, {'likedComments': likedComments});
         // 댓글 문서에 좋아요 수 증가
-        await transaction
-            .update(commentRef, {'likesCount': currentLikesCount + 1});
+        await transaction.update(commentRef, {'likesCount': currentLikesCount + 1});
       } else {
         // 유저 문서에서 좋아요 제거
         likedComments.remove(commentId);
         await transaction.update(userRef, {'likedComments': likedComments});
         // 댓글 문서에 좋아요 수 감소
-        await transaction
-            .update(commentRef, {'likesCount': currentLikesCount - 1});
+        await transaction.update(commentRef, {'likesCount': currentLikesCount - 1});
       }
     }).catchError((error) {
       print("Error updating favorite: $error");
@@ -88,10 +76,9 @@ class _CommentLikeButtonState extends State<CommentLikeButton> {
         .doc(userId)
         .snapshots()
         .map((snapshot) {
-      final likedComments = snapshot.data()?['likedComments'] ?? {};
-      return likedComments.containsKey(commentId) &&
-          likedComments[commentId] == true;
-    });
+          final likedComments = snapshot.data()?['likedComments'] ?? {};
+          return likedComments.containsKey(commentId) && likedComments[commentId] == true;
+        });
   }
 
   @override
@@ -118,8 +105,7 @@ class _CommentLikeButtonState extends State<CommentLikeButton> {
                 color: Color(0XFF4E5968),
               ),
               onPressed: () async {
-                await toggleFavorite(
-                    widget.postId, widget.commentId, !_isFavorited);
+                await toggleFavorite(widget.postId, widget.commentId, !_isFavorited);
                 setState(() {
                   _isFavorited = !_isFavorited;
                 });

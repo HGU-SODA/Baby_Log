@@ -42,9 +42,9 @@ Stream<bool> isPostFavoritedByUser(String postId) {
       .doc(userId)
       .snapshots()
       .map((snapshot) {
-    final likedPosts = snapshot.data()?['likedPosts'] ?? {};
-    return likedPosts.containsKey(postId) && likedPosts[postId] == true;
-  });
+        final likedPosts = snapshot.data()?['likedPosts'] ?? {};
+        return likedPosts.containsKey(postId) && likedPosts[postId] == true;
+      });
 }
 
 Stream<List<DocumentSnapshot>> getPostsByType(String type) {

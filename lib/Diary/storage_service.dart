@@ -1,6 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:typed_data';
-
 class StorageService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   Future<String> uploadImage(Uint8List imageData, String fileName) async {

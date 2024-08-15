@@ -1,10 +1,11 @@
+import 'package:baaby_log/Homepage/PregnantHomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:baaby_log/navigationBar.dart';
+import '../navigationBar.dart';
 
 class PregnantPage extends StatefulWidget {
   const PregnantPage({Key? key}) : super(key: key);
@@ -44,6 +45,7 @@ class _PregnantPageState extends State<PregnantPage> {
         await _firestore.collection('users').doc(user.uid).update({
           'nickname': _nicknameController.text.trim(),
           'dueDate': _selectedDate.toString(),
+          'status': '임신 중이에요',
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -52,6 +54,7 @@ class _PregnantPageState extends State<PregnantPage> {
           ),
         );
 
+        // 로그인된 사용자의 상태에 따라 홈 페이지를 설정
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const navigationBar()),

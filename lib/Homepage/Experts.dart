@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:baaby_log/Homepage/Experts1.dart';
 import 'Columns.dart';
 
 class Experts extends StatelessWidget {
@@ -10,7 +10,7 @@ class Experts extends StatelessWidget {
     return Column(
       children: [
         const Padding(
-          padding: EdgeInsets.fromLTRB(0, 120, 0, 30),
+          padding: EdgeInsets.fromLTRB(0, 67, 0, 30),
           child: Text(
             '전문가 칼럼',
             style: TextStyle(

@@ -49,6 +49,18 @@ class _SignupPageState extends State<SignUpPage> {
       User? user = _auth.currentUser;
       await user?.reload();
       if (user != null && user.emailVerified) {
+        // ID 중복 확인
+        bool isDuplicate = await _checkDuplicateID(_idController.text.trim());
+        if (isDuplicate) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('중복된 아이디입니다. 다른 아이디를 사용하세요.'),
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+          return;
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('이메일 인증 완료!'),
@@ -81,6 +93,13 @@ class _SignupPageState extends State<SignUpPage> {
         ),
       );
     }
+  }
+
+  Future<bool> _checkDuplicateID(String id) async {
+    final QuerySnapshot result =
+        await _firestore.collection('users').where('ID', isEqualTo: id).get();
+    final List<DocumentSnapshot> documents = result.docs;
+    return documents.isNotEmpty;
   }
 
   @override
@@ -117,14 +136,69 @@ class _SignupPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
-                      child: _buildTextField('이메일 인증', _emailController, false,
-                          hintText: '~@gmail.com',
-                          keyboardType: TextInputType.emailAddress),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(43.0, 0, 43, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                '이메일 인증',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontFamily: 'Pretendard Variable',
+                                  fontWeight: FontWeight.w600,
+                                  height: 0,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Container(
+                              width: 350,
+                              height: 31,
+                              decoration:
+                                  const BoxDecoration(color: Colors.white),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width: 350,
+                                  child: TextField(
+                                    controller: _emailController,
+                                    cursorColor: const Color(0XFFFFDCB2),
+                                    keyboardType: TextInputType.emailAddress,
+                                    decoration: InputDecoration(
+                                      hintText: '~@gmail.com',
+                                      hintStyle: const TextStyle(
+                                        color: Color(0xFFA7A7A7),
+                                        fontSize: 13,
+                                        fontFamily: 'Pretendard Variable',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      enabledBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xFFA8A8A8)),
+                                      ),
+                                      focusedBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xFFA7A7A7)),
+                                      ),
+                                      isCollapsed: true,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    //const SizedBox(width: 5.0), // 간격을 15로 유지
                     Padding(
-                      padding:
-                          const EdgeInsets.only(right: 43.0), // 오른쪽에만 43 패딩 적용
+                      padding: const EdgeInsets.only(right: 43.0),
                       child: Container(
                         width: 69,
                         height: 27,

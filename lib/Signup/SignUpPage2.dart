@@ -1,8 +1,11 @@
+import 'package:baaby_log/Homepage/LookHomePage.dart';
+import 'package:baaby_log/Homepage/ParentHomePage.dart';
+import 'package:baaby_log/Homepage/PregnantHomePage.dart';
 import 'package:baaby_log/Signup/Pregnant.dart';
-import 'package:baaby_log/navigationBar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../navigationBar.dart';
 
 class SignUpPage2 extends StatefulWidget {
   const SignUpPage2({Key? key}) : super(key: key);
@@ -24,6 +27,18 @@ class _SignUpPage2State extends State<SignUpPage2> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('닉네임과 성별을 모두 입력해주세요.'),
+          duration: Duration(milliseconds: 500),
+        ),
+      );
+      return;
+    }
+
+    bool isDuplicate =
+        await _checkDuplicateNickname(_nickNameController.text.trim());
+    if (isDuplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('이미 사용 중인 닉네임입니다. 다른 닉네임을 사용하세요.'),
           duration: Duration(milliseconds: 500),
         ),
       );
@@ -79,9 +94,18 @@ class _SignUpPage2State extends State<SignUpPage2> {
     }
   }
 
+  Future<bool> _checkDuplicateNickname(String nickname) async {
+    final QuerySnapshot result = await _firestore
+        .collection('users')
+        .where('nickName', isEqualTo: nickname)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    return documents.isNotEmpty;
+  }
+
   Widget _buildIcon(String label, String imageAsset) {
     return Padding(
-      padding: const EdgeInsets.only(left: 43.0), // Apply left padding here
+      padding: const EdgeInsets.only(left: 43.0),
       child: GestureDetector(
         onTap: () {
           setState(() {
@@ -214,8 +238,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        43.0, 0, 0, 10), // Apply left padding here
+                    padding: EdgeInsets.fromLTRB(43.0, 0, 0, 10),
                     child: Text('아이콘 설정',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),

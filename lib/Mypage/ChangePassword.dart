@@ -127,6 +127,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       child: TextField(
         controller: controller,
         obscureText: true,
+        cursorColor: Color(0XFFFF9C27),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
           hintText: label,
@@ -136,10 +137,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              width: 1,
-              color: Color(0xFFA7A7A7),
-            ),
+            borderSide: BorderSide(color: Colors.black, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.black),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.black),
           ),
         ),
       ),

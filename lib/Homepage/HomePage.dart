@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'WeekInfo.dart';
 import 'Experts.dart';
 
@@ -45,6 +44,26 @@ class HomePage extends StatelessWidget {
                       ),
                       Image.asset('assets/홈배경.png'),
                     ],
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    '임신 전 안내사항',
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0XFFFFAB47),
+                    ),
+                  ),
+                  Text(
+                    '<건강한 임신을 위한 준비>',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0XFF2D2D2D),
+                    ),
                   ),
                 ],
               ),
