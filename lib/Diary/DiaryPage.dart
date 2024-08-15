@@ -118,7 +118,7 @@ class _DiaryPageState extends State<DiaryPage> {
         _noteController.text,
         imageUrl ?? _imageUrl,
       );
-      _showCustomSnackbar();
+      _showCustomSnackbar('저장되었습니다!');
       widget.onSave(imageUrl ?? _imageUrl, _noteController.text);
       setState(() {
         _isSaved = true;
@@ -171,7 +171,7 @@ class _DiaryPageState extends State<DiaryPage> {
                 text: '삭제',
                 onTap: () {
                   Navigator.pop(context);
-                  _showDeleteDialog();
+                  customDeleteDialog();
                 },
               ),
             ],
@@ -179,6 +179,87 @@ class _DiaryPageState extends State<DiaryPage> {
         );
       },
     );
+  }
+
+  void customDeleteDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.asset('assets/deteledialog.png'),
+              Positioned(
+                bottom: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        child: Text(
+                          '예',
+                          style: TextStyle(
+                            color: Color(0XFF2D2D2D),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await _deleteDiaryEntry();
+                        },
+                      ),
+                      SizedBox(width: 80),
+                      TextButton(
+                        child: Text(
+                          '아니오',
+                          style: TextStyle(
+                            color: Color(0XFF2D2D2D),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showCustomSnackbar(String message) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final snackbar = SnackBar(
+      content: Container(
+        height: 25,
+        width: double.infinity,
+        color: Color(0XFFFFDCB2),
+        child: Center(
+          child: Text(
+            message,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+        ),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Color(0XFFFFDCB2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      elevation: 0,
+      duration: Duration(seconds: 1),
+    );
+    scaffoldMessenger.showSnackBar(snackbar);
   }
 
   Container _buildBottomSheetTile({
@@ -221,45 +302,6 @@ class _DiaryPageState extends State<DiaryPage> {
     );
   }
 
-  void _showDeleteDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color(0XFFFFEDD8),
-          title: Text('삭제하시겠습니까?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                await _deleteDiaryEntry();
-              },
-              child: Text(
-                '예',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                '아니오',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> _deleteDiaryEntry() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -299,31 +341,6 @@ class _DiaryPageState extends State<DiaryPage> {
       _imageBytes = null;
       _imageUrl = null;
     });
-  }
-
-  void _showCustomSnackbar() {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final snackbar = SnackBar(
-      content: Container(
-        height: 25,
-        width: double.infinity,
-        color: Color(0XFFFFDCB2),
-        child: Center(
-          child: Text(
-            '저장되었습니다!',
-            style: TextStyle(color: Colors.black, fontSize: 16),
-          ),
-        ),
-      ),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Color(0XFFFFDCB2),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      elevation: 0,
-      duration: Duration(seconds: 1),
-    );
-    scaffoldMessenger.showSnackBar(snackbar);
   }
 
   @override

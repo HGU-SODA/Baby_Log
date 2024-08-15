@@ -12,7 +12,7 @@ class _Splash1State extends State<Splash1> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(milliseconds: 2500), () {
+    Timer(Duration(milliseconds: 3500), () {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(

@@ -776,6 +776,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
+                          _showCustomSnackbar('신고되었습니다!');
                         },
                       ),
                       SizedBox(width: 80),

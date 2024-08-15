@@ -136,25 +136,28 @@ class _PostFormState extends State<PostForm> {
           ),
         ),
         actions: [
-          OutlinedButton(
-            child: Text(
-              '완료',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: OutlinedButton(
+              child: Text(
+                '완료',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Color(0XFFFF9C27),
-              side: BorderSide.none,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Color(0XFFFF9C27),
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                elevation: 0,
               ),
-              elevation: 0,
+              onPressed: _submitForm,
             ),
-            onPressed: _submitForm,
           ),
         ],
       ),
@@ -163,10 +166,10 @@ class _PostFormState extends State<PostForm> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Wrap(
-                spacing: 12,
+                spacing: 16,
                 children: _categories.map((category) {
                   return ChoiceChip(
                     showCheckmark: false,

@@ -16,6 +16,31 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  void _showCustomSnackbar(String message) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final snackbar = SnackBar(
+      content: Container(
+        height: 25,
+        width: double.infinity,
+        color: Color(0XFFFFDCB2),
+        child: Center(
+          child: Text(
+            message,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+        ),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Color(0XFFFFDCB2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      elevation: 0,
+      duration: Duration(seconds: 1),
+    );
+    scaffoldMessenger.showSnackBar(snackbar);
+  }
+
   Future<void> _changePassword() async {
     if (_newPasswordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -38,22 +63,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         await user.reauthenticateWithCredential(cred);
 
         await user.updatePassword(_newPasswordController.text);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('비밀번호가 성공적으로 변경되었습니다.'),
-            duration: Duration(milliseconds: 500),
-          ),
-        );
+        _showCustomSnackbar('비밀번호가 성공적으로 변경되었습니다.');
         Navigator.pop(context);
       }
     } catch (e) {
       print("비밀번호 변경 실패: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('비밀번호 변경 실패: ${e.toString()}'),
-          duration: const Duration(milliseconds: 500),
-        ),
-      );
+      _showCustomSnackbar('비밀번호 변경 실패: ${e.toString()}');
     }
   }
 

@@ -9,6 +9,7 @@ class Info1 extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
         elevation: 0, // Removes shadow under the AppBar
         iconTheme: const IconThemeData(
