@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      //home: Splash1(),
-      home: navigationBar(),
+      home: Splash1(),
+      //home: navigationBar(),
 
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

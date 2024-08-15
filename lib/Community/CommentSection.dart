@@ -146,14 +146,28 @@ class _CommentsSectionState extends State<CommentsSection> {
                         },
                       ),
                       SizedBox(width: 6),
-                      Text(
-                        commentData['authorNickname'],
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Color(0XFF2D2D2D),
-                          fontWeight: FontWeight.w700,
-                          fontFamily: "Inter",
-                        ),
+                      Column(
+                        children: [
+                          SizedBox(height: 12),
+                          Text(
+                            commentData['authorNickname'],
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color(0XFF2D2D2D),
+                              fontWeight: FontWeight.w700,
+                              fontFamily: "Inter",
+                            ),
+                          ),
+                          Text(
+                            formattedDate,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0XFF8994A4),
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Pretendard Variable",
+                            ),
+                          ),
+                        ],
                       ),
                       Spacer(),
                       CommentLikeButton(
@@ -169,25 +183,20 @@ class _CommentsSectionState extends State<CommentsSection> {
                       ),
                     ],
                   ),
-                  SizedBox(width: 20),
-                  Text(
-                    formattedDate,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0XFF8994A4),
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Pretendard Variable",
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Text(
-                    content,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Pretendard Variable",
-                    ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      SizedBox(width: 28),
+                      Text(
+                        content,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Pretendard Variable",
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 8),
                 ],

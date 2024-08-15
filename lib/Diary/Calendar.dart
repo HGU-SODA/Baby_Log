@@ -380,12 +380,12 @@ class _CalendarState extends State<Calendar> {
                   ),
                 ),
                 Positioned(
-                  bottom: 27,
-                  right: 59,
+                  bottom: 10,
+                  right: 40,
                   child: Image.asset(
-                    'assets/엄마와 아기.png',
-                    width: 150,
-                    height: 100,
+                    'assets/Mom&baby.png',
+                    width: 240,
+                    height: 230,
                     fit: BoxFit.cover,
                   ),
                 ),

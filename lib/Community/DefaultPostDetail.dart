@@ -703,7 +703,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
             children: [
               Image.asset('assets/deteledialog.png'),
               Positioned(
-                bottom: 10,
+                bottom: 0,
                 child: Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Row(
@@ -759,7 +759,7 @@ class _DefaultPostDetailState extends State<DefaultPostDetail> {
             children: [
               Image.asset('assets/reportdialog.png'),
               Positioned(
-                bottom: 10,
+                bottom: 0,
                 child: Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Row(
