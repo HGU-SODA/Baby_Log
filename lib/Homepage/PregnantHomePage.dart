@@ -1,3 +1,4 @@
+import 'package:baaby_log/Homepage/LookHomePage.dart';
 import 'package:baaby_log/Homepage/Pregnant/info2.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'Experts.dart';
 import '../Homepage/Pregnant/info1.dart';
 import '../Homepage/Pregnant/info2.dart';
 import '../Homepage/Pregnant/info3.dart';
+import '../Mypage/ChangeBabyInfo.dart';
 
 class PregnantHomePage extends StatefulWidget {
   const PregnantHomePage({super.key});
@@ -20,6 +22,7 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String _dueDate = "Loading...";
   String _dDay = "Calculating...";
+  String _nickname = "Loading..."; // 아이의 태명을 저장하는 변수
 
   int _textIndex = 0;
   final List<String> _texts = [
@@ -39,19 +42,21 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
   @override
   void initState() {
     super.initState();
-    _fetchDueDate();
+    _fetchDueDateAndNickname(); // 태명도 함께 가져오도록 수정
   }
 
-  Future<void> _fetchDueDate() async {
+  Future<void> _fetchDueDateAndNickname() async {
     User? user = _auth.currentUser;
     if (user != null) {
       DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(user.uid).get();
       if (userDoc.exists && userDoc.data() != null) {
         DateTime dueDate = DateTime.parse(userDoc.data()!['dueDate']);
+        String nickname = userDoc.data()!['nickname'] ?? "태명 없음"; // 태명 가져오기
         setState(() {
           _dueDate = DateFormat('yyyy.MM.dd').format(dueDate);
           _dDay = 'D-${_calculateDday(dueDate)}';
+          _nickname = nickname; // 태명 설정
         });
       }
     }
@@ -106,8 +111,8 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
                     child: Container(
                       width: 200,
                       height: 50,
-                      child: const Text(
-                        '몽글이',
+                      child: Text(
+                        _nickname, // 업데이트된 태명 사용
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 40,
@@ -205,201 +210,6 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// 임신 전, 주차별, 출산 후 안내사항 카드
-class ScrollCards extends StatelessWidget {
-  const ScrollCards({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 10),
-        const Text(
-          '주차별 안내사항',
-          style: TextStyle(
-            fontSize: 35,
-            fontWeight: FontWeight.w700,
-            color: Color(0XFFFFAB47),
-          ),
-        ),
-        const Text(
-          '<임신 12주차>',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color(0XFF2D2D2D),
-          ),
-        ),
-        const SizedBox(height: 33),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Info1()),
-            );
-          },
-          child: Container(
-            width: 370,
-            height: 97,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            decoration: ShapeDecoration(
-              color: const Color(0xFFFCFCFC),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 1.50, color: Color(0xFFF0F0F0)),
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 14.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '👶 태아의 심박동 소리',
-                          style: TextStyle(
-                            color: Color(0xFF2D2D2D),
-                            fontSize: 17,
-                            fontFamily: 'Pretendard Variable',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    '임신 12주가 되면 태아의 심박동 소리를 들을 수 있습니다.\n다음 생리할 때가 돌아왔는데도 월경이 없다면',
-                    style: TextStyle(
-                      color: Color(0xFFA7A7A7),
-                      fontSize: 15,
-                      fontFamily: 'Pretendard Variable',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Info2()),
-            );
-          },
-          child: Container(
-            width: 370,
-            height: 97,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            decoration: ShapeDecoration(
-              color: const Color(0xFFFCFCFC),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 1.50, color: Color(0xFFF0F0F0)),
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 14.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '🤰 임신부의 피부에 나타나는 변화',
-                          style: TextStyle(
-                            color: Color(0xFF2D2D2D),
-                            fontSize: 17,
-                            fontFamily: 'Pretendard Variable',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    '사람에 따라선 복부 중앙의 피부가 눈에 띄게 거무스름해지\n면서 흑선이라고 하는 수직선이 생기기도 하고 얼굴이나...',
-                    style: TextStyle(
-                      color: Color(0xFFA7A7A7),
-                      fontSize: 15,
-                      fontFamily: 'Pretendard Variable',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Info3()),
-            );
-          },
-          child: Container(
-            width: 370,
-            height: 97,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            decoration: ShapeDecoration(
-              color: const Color(0xFFFCFCFC),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 1.50, color: Color(0xFFF0F0F0)),
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 14.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '❗ 임신부의 신체에 나타나는 변화',
-                          style: TextStyle(
-                            color: Color(0xFF2D2D2D),
-                            fontSize: 17,
-                            fontFamily: 'Pretendard Variable',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    '몸의 컨디션이 좋아지는 것을 느끼기 시작할 것이다.\n입덧이 서서히 사라지고, 아직은 배가 그리 크지 않아서...',
-                    style: TextStyle(
-                      color: Color(0xFFA7A7A7),
-                      fontSize: 15,
-                      fontFamily: 'Pretendard Variable',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

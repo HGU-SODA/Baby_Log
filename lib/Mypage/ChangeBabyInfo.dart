@@ -33,7 +33,7 @@ class _ChangeBabyInfoPageState extends State<ChangeBabyInfoPage> {
       DocumentSnapshot userData =
           await _firestore.collection('users').doc(user.uid).get();
       setState(() {
-        _nicknameController.text = userData['nickname'] ?? '';
+        _nicknameController.text = userData['nickname'] ?? ''; // 아이의 태명 불러오기
         _selectedDate =
             DateTime.parse(userData['dueDate'] ?? DateTime.now().toString());
       });
@@ -65,7 +65,8 @@ class _ChangeBabyInfoPageState extends State<ChangeBabyInfoPage> {
           ),
         );
 
-        Navigator.pop(context);
+        // 변경된 태명을 Navigator.pop을 통해 전달
+        Navigator.pop(context, _nicknameController.text.trim());
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

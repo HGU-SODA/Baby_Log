@@ -20,7 +20,8 @@ class _MyPageState extends State<MyPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String _status = '';
-  String _nickname = '';
+  String _nickName = ''; // 사용자의 이름
+  String _nickname = ''; // 아이의 태명
   String _dueDate = '';
 
   @override
@@ -36,7 +37,8 @@ class _MyPageState extends State<MyPage> {
           await _firestore.collection('users').doc(user.uid).get();
       setState(() {
         _status = userData['status'] ?? '';
-        _nickname = userData['nickName'] ?? '';
+        _nickName = userData['nickName'] ?? ''; // 사용자의 이름 불러오기
+        _nickname = userData['nickname'] ?? ''; // 아이의 태명 불러오기
         _dueDate = userData['dueDate'] ?? '';
       });
     }
@@ -113,7 +115,7 @@ class _MyPageState extends State<MyPage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 50),
                               child: Text(
-                                _nickname,
+                                _nickName, // 사용자의 이름 출력
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -169,13 +171,19 @@ class _MyPageState extends State<MyPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const ChangeBabyInfoPage(),
                             ),
                           );
+
+                          if (result != null) {
+                            setState(() {
+                              _nickname = result; // 전달받은 태명으로 업데이트
+                            });
+                          }
                         },
                         child: Text(
                           "아이 정보 변경 ",

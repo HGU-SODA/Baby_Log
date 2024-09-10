@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Experts.dart';
 import '../Homepage/Parent/info1.dart';
 import '../Homepage/Parent/info2.dart';
@@ -12,8 +14,32 @@ class ParentHomePage extends StatefulWidget {
 }
 
 class _ParentHomePageState extends State<ParentHomePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String _nickname = "Loading..."; // 아이의 태명을 저장하는 변수
   int _textIndex = 0;
   final List<String> _texts = ['늘 감사해요!', '사랑해요~', '우헤헤~!', '엄마! 스마일~', '미~소~'];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNickname(); // 태명 가져오는 함수 호출
+  }
+
+  // Firestore에서 아이의 태명을 불러오는 함수
+  Future<void> _fetchNickname() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+          await _firestore.collection('users').doc(user.uid).get();
+      if (userDoc.exists && userDoc.data() != null) {
+        setState(() {
+          _nickname = userDoc.data()!['nickname'] ?? '태명 없음'; // 태명 설정
+        });
+      }
+    }
+  }
 
   void _changeText() {
     setState(() {
@@ -42,7 +68,8 @@ class _ParentHomePageState extends State<ParentHomePage> {
                   ),
                   Positioned(
                     top: 110,
-                    left: 120,
+                    //left: 120,
+
                     child: Container(
                       width: 200,
                       height: 50,
@@ -64,9 +91,9 @@ class _ParentHomePageState extends State<ParentHomePage> {
                     child: Container(
                       width: 200,
                       height: 50,
-                      child: const Text(
-                        '몽글이',
-                        style: TextStyle(
+                      child: Text(
+                        _nickname, // 업데이트된 태명 사용
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 40,
                           fontFamily: 'Pretendard Variable',
