@@ -42,7 +42,7 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
   @override
   void initState() {
     super.initState();
-    _fetchDueDateAndNickname(); // 태명도 함께 가져오도록 수정
+    _fetchDueDateAndNickname();
   }
 
   Future<void> _fetchDueDateAndNickname() async {
@@ -52,11 +52,11 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
           await _firestore.collection('users').doc(user.uid).get();
       if (userDoc.exists && userDoc.data() != null) {
         DateTime dueDate = DateTime.parse(userDoc.data()!['dueDate']);
-        String nickname = userDoc.data()!['nickname'] ?? "태명 없음"; // 태명 가져오기
+        String nickname = userDoc.data()!['nickname'] ?? "태명 없음";
         setState(() {
           _dueDate = DateFormat('yyyy.MM.dd').format(dueDate);
           _dDay = 'D-${_calculateDday(dueDate)}';
-          _nickname = nickname; // 태명 설정
+          _nickname = nickname;
         });
       }
     }
@@ -108,17 +108,19 @@ class _PregnantHomePageState extends State<PregnantHomePage> {
                   Positioned(
                     top: 100,
                     left: 190,
-                    child: Container(
-                      width: 200,
-                      height: 50,
-                      child: Text(
-                        _nickname, // 업데이트된 태명 사용
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 40,
-                          fontFamily: 'Pretendard Variable',
-                          fontWeight: FontWeight.w700,
-                          height: 0,
+                    child: Center(
+                      child: Container(
+                        width: 200,
+                        height: 50,
+                        child: Text(
+                          _nickname,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 40,
+                            fontFamily: 'Pretendard Variable',
+                            fontWeight: FontWeight.w700,
+                            height: 0,
+                          ),
                         ),
                       ),
                     ),

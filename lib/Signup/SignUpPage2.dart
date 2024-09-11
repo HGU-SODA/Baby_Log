@@ -48,13 +48,19 @@ class _SignUpPage2State extends State<SignUpPage2> {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
+        String? nickname =
+            (_selectedIcon == '둘러볼게요' || _selectedIcon == '아기를 키우고 있어요')
+                ? '몽글이'
+                : null;
+
         await _firestore.collection('users').doc(user.uid).update({
           'nickName': _nickNameController.text.trim(),
           'gender': _genderController.text.trim(),
           'status': _selectedIcon,
-          'nickname': _selectedIcon == '임신 중이에요' ? null : 'default',
+          'nickname': nickname,
           'dueDate': _selectedIcon == '임신 중이에요' ? null : 'default',
         });
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('추가 정보가 저장되었습니다.'),
@@ -71,8 +77,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => navigationBar()),
-            (Route<dynamic> route) =>
-                false, // This removes all previous routes.
+            (Route<dynamic> route) => false,
           );
         }
       } else {

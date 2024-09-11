@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Splash1(),
-      //home: navigationBar(),
+      //home: SignUpPage2(),
 
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

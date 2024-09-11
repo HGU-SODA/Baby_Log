@@ -1,3 +1,4 @@
+import 'package:baaby_log/Mypage/ChangeBabyInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,10 +35,27 @@ class _ChangeIconPageState extends State<ChangeIconPage> {
   Future<void> _updateIcon() async {
     User? user = _auth.currentUser;
     if (user != null) {
-      await _firestore.collection('users').doc(user.uid).update({
-        'status': _selectedIcon,
-      });
-      Navigator.pop(context, true); // true를 반환하여 변경사항이 있음을 알림
+      DocumentSnapshot userData =
+          await _firestore.collection('users').doc(user.uid).get();
+
+      // Check if the user's nickname is "몽글이"
+      String nickname = userData['nickname'] ?? '';
+
+      if (_selectedIcon == '임신 중이에요' && nickname == '몽글이') {
+        // Redirect to ChangeNicknamePage if nickname is "몽글이" and status is "임신 중이에요"
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ChangeBabyInfoPage(),
+          ),
+        );
+      } else {
+        // Proceed with the original update if nickname is not "몽글이"
+        await _firestore.collection('users').doc(user.uid).update({
+          'status': _selectedIcon,
+        });
+        Navigator.pop(context, true); // Return to the previous screen
+      }
     }
   }
 

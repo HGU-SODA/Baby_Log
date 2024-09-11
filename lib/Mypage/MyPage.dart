@@ -1,3 +1,4 @@
+import 'package:baaby_log/Mypage/delete.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -300,24 +301,14 @@ class _MyPageState extends State<MyPage> {
                       SizedBox(height: 11),
                       GestureDetector(
                         onTap: () async {
-                          try {
-                            User? user = FirebaseAuth.instance.currentUser;
-
-                            if (user != null) {
-                              await user.delete();
-                              _showCustomSnackbar("계정이 삭제되었습니다!");
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()),
-                                (Route<dynamic> route) => false,
-                              );
-                            }
-                          } catch (e) {
-                            print("계정 삭제 중 오류 발생: $e");
-                            if (e is FirebaseAuthException &&
-                                e.code == 'requires-recent-login') {}
-                          }
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DeletePage(
+                                  nickname:
+                                      _nickname), // Pass the nickname to DeletePage
+                            ),
+                          );
                         },
                         child: Text(
                           "계정 탈퇴",
